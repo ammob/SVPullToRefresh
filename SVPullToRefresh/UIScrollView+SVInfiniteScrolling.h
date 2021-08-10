@@ -13,6 +13,7 @@
 
 @interface UIScrollView (SVInfiniteScrolling)
 
+- (void)addInfiniteScrolling:(SVInfiniteScrollingView *)view withActionHandler:(void (^)(void))actionHandler;
 - (void)addInfiniteScrollingWithActionHandler:(void (^)(void))actionHandler;
 - (void)triggerInfiniteScrolling;
 
@@ -37,6 +38,7 @@ typedef NSUInteger SVInfiniteScrollingState;
 @property (nonatomic, readonly) SVInfiniteScrollingState state;
 @property (nonatomic, readwrite) BOOL enabled;
 
+- (void)setState:(SVInfiniteScrollingState)newState;
 - (void)setCustomView:(UIView *)view forState:(SVInfiniteScrollingState)state;
 
 - (void)startAnimating;

@@ -22,6 +22,10 @@ typedef NS_ENUM(NSUInteger, SVPullToRefreshPosition) {
 
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler;
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position;
+
+- (void)addPullToRefresh:(SVPullToRefreshView *)pullToRefreshView withActionHandler:(void (^)(void))actionHandler;
+- (void)addPullToRefresh:(SVPullToRefreshView *)pullToRefreshView withActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position;
+
 - (void)triggerPullToRefresh;
 
 @property (nonatomic, strong, readonly) SVPullToRefreshView *pullToRefreshView;
@@ -55,6 +59,8 @@ typedef NS_ENUM(NSUInteger, SVPullToRefreshState) {
 
 - (void)startAnimating;
 - (void)stopAnimating;
+
+- (void)setState:(SVPullToRefreshState)newState;
 
 // deprecated; use setSubtitle:forState: instead
 @property (nonatomic, strong, readonly) UILabel *dateLabel DEPRECATED_ATTRIBUTE;

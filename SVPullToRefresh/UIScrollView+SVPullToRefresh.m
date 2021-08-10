@@ -65,21 +65,9 @@ static char UIScrollViewPullToRefreshView;
 
 @dynamic pullToRefreshView, showsPullToRefresh;
 
-- (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position {
-    
+- (void)addPullToRefresh:(SVPullToRefreshView *)view withActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position
+{
     if(!self.pullToRefreshView) {
-        CGFloat yOrigin;
-        switch (position) {
-            case SVPullToRefreshPositionTop:
-                yOrigin = -SVPullToRefreshViewHeight;
-                break;
-            case SVPullToRefreshPositionBottom:
-                yOrigin = self.contentSize.height;
-                break;
-            default:
-                return;
-        }
-        SVPullToRefreshView *view = [[SVPullToRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, SVPullToRefreshViewHeight)];
         view.pullToRefreshActionHandler = actionHandler;
         view.scrollView = self;
         [self addSubview:view];
@@ -90,11 +78,32 @@ static char UIScrollViewPullToRefreshView;
         self.pullToRefreshView = view;
         self.showsPullToRefresh = YES;
     }
-    
+}
+
+- (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position
+{
+    CGFloat yOrigin;
+    switch (position) {
+        case SVPullToRefreshPositionTop:
+            yOrigin = -SVPullToRefreshViewHeight;
+            break;
+        case SVPullToRefreshPositionBottom:
+            yOrigin = self.contentSize.height;
+            break;
+        default:
+            return;
+    }
+    SVPullToRefreshView *view = [[SVPullToRefreshView alloc] initWithFrame:CGRectMake(0, yOrigin, self.bounds.size.width, SVPullToRefreshViewHeight)];
+    [self addPullToRefresh:view withActionHandler:actionHandler position:position];
 }
 
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler {
     [self addPullToRefreshWithActionHandler:actionHandler position:SVPullToRefreshPositionTop];
+}
+
+- (void)addPullToRefresh:(SVPullToRefreshView *)pullToRefreshView withActionHandler:(void (^)(void))actionHandler
+{
+    [self addPullToRefresh:pullToRefreshView withActionHandler:actionHandler position:SVPullToRefreshPositionTop];
 }
 
 - (void)triggerPullToRefresh {
@@ -281,14 +290,16 @@ static char UIScrollViewPullToRefreshView;
         self.subtitleLabel.text = subtitle.length > 0 ? subtitle : nil;
         
         
-        CGSize titleSize = [self.titleLabel.text sizeWithFont:self.titleLabel.font
-                                            constrainedToSize:CGSizeMake(labelMaxWidth,self.titleLabel.font.lineHeight)
-                                                lineBreakMode:self.titleLabel.lineBreakMode];
+//        CGSize titleSize = [self.titleLabel.text sizeWithFont:self.titleLabel.font
+//                                            constrainedToSize:CGSizeMake(labelMaxWidth,self.titleLabel.font.lineHeight)
+//                                                lineBreakMode:self.titleLabel.lineBreakMode];
+        CGSize titleSize = [self.titleLabel.text boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.titleLabel.font} context:nil].size;
         
         
-        CGSize subtitleSize = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
-                                                  constrainedToSize:CGSizeMake(labelMaxWidth,self.subtitleLabel.font.lineHeight)
-                                                      lineBreakMode:self.subtitleLabel.lineBreakMode];
+//        CGSize subtitleSize = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
+//                                                  constrainedToSize:CGSizeMake(labelMaxWidth,self.subtitleLabel.font.lineHeight)
+//                                                      lineBreakMode:self.subtitleLabel.lineBreakMode];
+        CGSize subtitleSize = [self.subtitleLabel.text boundingRectWithSize:CGSizeMake([UIScreen mainScreen].bounds.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.subtitleLabel.font} context:nil].size;
         
         CGFloat maxLabelWidth = MAX(titleSize.width,subtitleSize.width);
         
